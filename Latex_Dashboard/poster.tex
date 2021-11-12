@@ -1,0 +1,416 @@
+
+%Made By Blake McCullough❤
+%Discord - Spoiled_Kitten#4911
+%Github - https://github.com/Blake-McCullough/
+%Email - privblakemccullough@protonmail.com
+
+%%%% NOTE FROM LEARNING, DO NOT SET ANYTHING TO VARIABLE \COUNT!!!
+
+%----------------------------------------------------------------------------------------
+%    PAGE TYPE DECLARING
+%----------------------------------------------------------------------------------------
+\documentclass[a0paper,landscape]{baposter}
+%Colour mode style
+\selectcolormodel{cmyk}
+
+%----------------------------------------------------------------------------------------
+%    DECLARES THE PACKAGES NEEDED
+%----------------------------------------------------------------------------------------
+\usepackage{wrapfig}
+\usepackage{lmodern}
+\usepackage{lipsum,graphicx}
+\usepackage[utf8]{inputenc} %unicode support
+\usepackage[T1]{fontenc}
+%PACKAGE FOR MONTH AND DATE
+\usepackage{datetime}
+% PIE CHART DRAWING LIBRARY
+\usepackage{pgf-pie}
+%CSV FILE READING LIBRARY
+\usepackage{datatool}
+%For generating bar graph
+\usepackage{bchart}
+%For trend line graph
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+%setting version
+\pgfplotsset{compat=1.17}
+%For graphs
+\usepackage{tikz}
+%USED TO COMPARE STRINGS
+\usepackage{xstring}
+
+
+%----------------------------------------------------------------------------------------
+%    CSV FILE SETUP
+%----------------------------------------------------------------------------------------
+%SETS UP CSV FILE FOR PICKING UP VARIABLES FOR MAIN USE
+\DTLsetseparator{,}
+\DTLloaddb{database}{database.csv}
+
+%SETS UP CSV FILE FOR PICKING UP VARIABLES FOR PAST SIX MONTHS
+\DTLsetseparator{,}
+\DTLloaddb{pastsixmonths}{pastsixmonths.csv}
+
+
+
+%----------------------------------------------------------------------------------------
+%    Calculates for previous months
+%----------------------------------------------------------------------------------------
+
+% \setdate{<day>}{<month>}{<year>}
+\newcommand{\setdate}[3]{\day=#1\month=#2\year=#3\relax}%
+
+
+
+
+%Calculates the last month
+\newcommand{\lastmonth}{%
+  \ifcase\month\or%  0
+    December\or   %  1
+    January\or    %  2
+    February\or   %  3
+    March\or      %  4
+    April\or      %  5
+    May\or        %  6
+    June\or       %  7
+    July\or       %  8
+    August\or     %  9
+    September\or  % 10
+    October\or    % 11
+    November\fi   % 12
+}
+
+
+%Calculates 6 months ago month
+
+\newcommand{\sixmonthprevious}{%
+  \ifcase\month\or%  0
+    July\or   %  1
+    August\or    %  2
+    September\or   %  3
+    October\or      %  4
+    November\or      %  5
+    December\or        %  6
+    January\or       %  7
+    February\or       %  8
+    March\or     %  9
+    April\or  % 10
+    May\or    % 11
+    June\fi   % 12
+}
+
+%----------------------------------------------------------------------------------------
+%    Random stuff
+%----------------------------------------------------------------------------------------
+\newcommand{\compresslist}{%
+\setlength{\itemsep}{0pt}%
+\setlength{\parskip}{1pt}%
+\setlength{\parsep}{0pt}%
+}
+
+\newenvironment{boenumerate}
+  {\begin{enumerate}\renewcommand\labelenumi{\textbf\theenumi.}}
+  {\end{enumerate}}
+
+
+\begin{document}
+%----------------------------------------------------------------------------------------
+%    setting colour code
+%----------------------------------------------------------------------------------------
+\definecolor{Mycolor1}{HTML}{00FFFF}
+\definecolor{Mycolor2}{HTML}{00AEEF}
+
+\begin{poster}
+{
+%----------------------------------------------------------------------------------------
+%    SETUP FOR PAGE
+%----------------------------------------------------------------------------------------
+grid=false,
+headerborder=open, % Adds a border around the header of content boxes
+colspacing=1em, % Column spacing
+bgColorOne=white, % Background color for the gradient on the left side of the poster
+bgColorTwo=white, % Background color for the gradient on the right side of the poster
+borderColor=Mycolor1, % Border color
+headerColorOne=Mycolor2, % Background color for the header in the content boxes (left side)
+headerColorTwo=Mycolor2, % Background color for the header in the content boxes (right side)
+headerFontColor=white, % Text color for the header text in the content boxes
+boxColorOne=white, % Background color of the content boxes
+textborder=rounded, %rectangle, % Format of the border around content boxes, can be: none, bars, coils, triangles, rectangle, rounded, roundedsmall, roundedright or faded
+eyecatcher=false, % Set to false for ignoring the left logo in the title and move the title left
+headerheight=0.11\textheight, % Height of the header
+headershape=rounded, % Specify the rounded corner in the content box headers, can be: rectangle, small-rounded, roundedright, roundedleft or rounded
+headershade=plain,
+headerfont=\Large\textsf, % Large, bold and sans serif font in the headers of content boxes
+%textfont={\setlength{\parindent}{1.5em}}, % Uncomment for paragraph indentation
+linewidth=2pt % Width of the border lines around content boxes
+}{}
+%----------------------------------------------------------------------------------------
+%	TITLE AND AUTHOR NAME
+%----------------------------------------------------------------------------------------
+{
+\textsf %Sans Serif
+{\vspace{0.3em}\\
+{\input{CompanyName.txt}}
+}
+} %Company title
+% {\small \vspace{0.7em} Department of Computing, TU Dublin, Tallaght, Dublin, Ireland}} 
+{\sf\vspace{0.2em}\\
+Security Review for \lastmonth % Sets the Month for the current review period
+\vspace{0.3em}\\
+\small{ Created by Blake McCullough's Software %KEEP AS IS CREDIT
+\vspace{0.2em}\\
+
+}
+}
+{\includegraphics[width=.13\linewidth]{company-logo.png}} % logo
+
+
+%----------------------------------------------------------------------------------------
+%    pulling data from CSV
+%----------------------------------------------------------------------------------------
+%Total database from 6 months prior
+\DTLassignfirstmatch{database}{count}{totalattackssixmonth}{\counted=count,\totalattacksixmonth=points}
+%Total attacks of current month
+\DTLassignfirstmatch{database}{count}{totalattacks}{\counted=count,\totalattackcurrentmonth=points}
+%Gets the value from six months ago for the top attack
+\DTLassignfirstmatch{database}{count}{commonattack}{\counted=count,\sixmonthsagoonecommonpoints=points,\sixmonthsagoonecommon=name}
+%One month ago
+\DTLassignfirstmatch{pastsixmonths}{month}{1}{\month=month,\onemonthpoints=points,\onemonth=name}
+%two months ago
+\DTLassignfirstmatch{pastsixmonths}{month}{2}{\month=month,\twomonthpoints=points,\twomonth=name}
+%three months ago
+\DTLassignfirstmatch{pastsixmonths}{month}{3}{\month=month,\threemonthpoints=points,\threemonth=name}
+%four months ago
+\DTLassignfirstmatch{pastsixmonths}{month}{4}{\month=month,\fourmonthpoints=points,\fourmonth=name}
+%five months ago
+\DTLassignfirstmatch{pastsixmonths}{month}{5}{\month=month,\fivemonthpoints=points,\fivemonth=name}
+%six months ago
+\DTLassignfirstmatch{pastsixmonths}{month}{6}{\month=month,\sixmonthpoints=points,\sixmonth=name}
+%First most common attack
+\DTLassignfirstmatch{database}{count}{1}{\counted=count,\onepoints=points,\onename=name}
+%Second most common attack
+\DTLassignfirstmatch{database}{count}{2}{\counted=count,\twopoints=points,\twoname=name}
+%Third most common attack
+\DTLassignfirstmatch{database}{count}{3}{\counted=count,\threepoints=points,\threename=name}
+%Fourth most common attack
+\DTLassignfirstmatch{database}{count}{4}{\counted=count,\fourpoints=points,\fourname=name}
+%Fifth most common attack
+\DTLassignfirstmatch{database}{count}{5}{\counted=count,\fivepoints=points,\fivename=name}
+%Sixth most common attack
+\DTLassignfirstmatch{database}{count}{6}{\counted=count,\sixpoints=points,\sixname=name}
+%Seventh most common attack
+\DTLassignfirstmatch{database}{count}{7}{\counted=count,\sevenpoints=points,\sevenname=name}
+%Eighth most common attack
+\DTLassignfirstmatch{database}{count}{8}{\counted=count,\eightpoints=points,\eightname=name}
+%Ninth most common attack
+\DTLassignfirstmatch{database}{count}{9}{\counted=count,\ninepoints=points,\ninename=name}
+%Tenth most common attack
+\DTLassignfirstmatch{database}{count}{10}{\counted=count,\tenpoints=points,\tenname=name}
+%High occurrences
+\DTLassignfirstmatch{database}{count}{High}{\counted=count,\High=points}
+%Medium occurrences
+\DTLassignfirstmatch{database}{count}{Medium}{\counted=count,\Medium=points}
+%Low occurrences
+\DTLassignfirstmatch{database}{count}{Low}{\counted=count,\Low=points}
+%Informational Occurrences
+\DTLassignfirstmatch{database}{count}{Informational}{\counted=count,\Informational=points}
+    
+    
+
+
+
+
+% this states the box starts at column 0 (edge of page), directly below the box labelled introduction for a span of 1 (column wide)
+\headerbox{Top 10 types of attacks}{name=subtopic1,column=0,row=0,span=1}{
+%----------------------------------------------------------------------------------------
+%    CREATES PIE GRAPH WITH VARIABLES DECLARED
+%----------------------------------------------------------------------------------------
+\begin{tikzpicture}
+
+\pie[
+    color = {
+    %one COLOUR
+        yellow!90!black,
+    %two COLOUR
+        green!60!black,
+    %three COLOUR
+        blue!60,
+    %four COLOUR
+        red!70, 
+    %five COLOUR
+        gray!70,
+    %six COLOUR
+        teal!20,
+    %seven COLOUR
+        black!50,
+    %eight COLOUR
+        green!90,
+    %nine COLOUR
+        yellow!20,
+    %Ten COLOUR
+        blue!20}, 
+    sum = auto %AUTOMATICALLY WORKS OUT PERCENTAGE THAT EACH NUMBER IS OVERALL
+]{\onepoints/\onename, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \twopoints/\twoname, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \threepoints/\threename, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \fourpoints/\fourname, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \fivepoints/\fivename, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \sixpoints/\sixname, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \sevenpoints/\sevenname, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \eightpoints/\eightname, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \ninepoints/\ninename, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \tenpoints/\tenname %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+}
+ 
+\end{tikzpicture}
+ 
+
+
+}
+
+
+% this states the box starts at column 0 (edge of page), directly below the box labelled introduction for a span of 1 (column wide)
+\headerbox{Severity of Attempts}{name=subtopic2,column=0,below=subtopic1,span=1}{
+ %----------------------------------------------------------------------------------------
+%CREATES PIE GRAPH WITH VARIABLES DECLARED
+%----------------------------------------------------------------------------------------
+\begin{tikzpicture}
+     
+\pie[
+    color = {
+    %High COLOUR
+        red!90,
+    %Medium COLOUR
+        yellow!60,
+    %Low COLOUR
+        green!60,
+    %Informational COLOUR
+        blue!70
+        },
+    sum = auto %AUTOMATICALLY WORKS OUT PERCENTAGE THAT EACH NUMBER IS OVERALL
+]{\High/High, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \Medium/Medium, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \Low/Low, %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    \Informational/Informational %SETS NUMBER FOR THE ELEMENT FROM VARIABLE
+    }
+ 
+\end{tikzpicture}
+ 
+
+    
+
+}
+% this states the box starts at column 0 (edge of page), directly below the box labelled introduction for a span of 1 (column wide)
+\headerbox{Total Attacks compared to 6 months ago}{name=subtopic3,column=1,row=0,span=2}{
+\vspace{1cm} %remove this, only added for spacing
+ %----------------------------------------------------------------------------------------
+ %    Bar chart for the total attacks
+ %----------------------------------------------------------------------------------------
+ \begin{center} 
+%BAR CHART WHICH TAKES VARIABLES FROM CSV AND PUT THEM ON GRAPH, ALSO GRABS THE CORRECT MONTH
+
+
+   \begin{bchart}[step=20]
+        \bigskip
+        \bclabel{Total Attacks}
+        \bcbar[color=yellow]{\totalattacksixmonth}
+        \bclabel{in \sixmonthprevious }
+        \bigskip
+        \bclabel{Total Attacks}
+        \bcbar{\totalattackcurrentmonth}
+        \bclabel{in \lastmonth }
+        \bigskip
+        
+
+    \end{bchart}
+ 
+\end{center} 
+\vspace{1cm} %remove this, only added for spacing
+
+
+}
+
+
+% this states the box starts at column 0 (edge of page), directly below the box labelled introduction for a span of 1 (column wide)
+\headerbox{Sub Topic 4}{name=subtopic4,column=3,row=0,span=1}{
+\vspace{0.5cm}
+ \begin{center} 
+{\includegraphics[width=7cm,height=5cm]{placeholder.png}}
+ \end{center} 
+\vspace{0.5cm}
+
+}
+
+% this states the box starts at column 0 (edge of page), directly below the box labelled introduction for a span of 1 (column wide)
+\headerbox{Attacks over past 6 months}{name=subtopic5,column=3,below=subtopic4,span=1}{
+%----------------------------------------------------------------------------------------
+%    trend line for past six months
+%----------------------------------------------------------------------------------------
+\begin{tikzpicture}
+%plot 0 is six months ago, plot 1 is five months ago etc
+    \begin{axis}
+        [
+        ,width=8.5cm
+        ,xlabel=Test
+        ,ylabel=Mean
+        ,xtick=data
+       %,xtick={0,1,...,3}
+        ,xticklabels={\onemonth,\twomonth,\threemonth,\fourmonth,\fivemonth,\sixmonth}
+        ]
+        \addplot+[sharp plot] coordinates
+        {(0,\onemonthpoints) (1,\twomonthpoints) (2,\threemonthpoints) (3,\fourmonthpoints) (4,\fivemonthpoints) (5,\sixmonthpoints)};
+    \end{axis}
+\end{tikzpicture}
+
+\vspace{0.15cm}
+
+
+
+
+
+}
+% this states the box starts at column 1 (left middle of page), directly below the box labelled introduction for a span of 2 (column wide)
+\headerbox{Summary}{name=Summary,column=1,below=subtopic3,span=2}{
+
+
+\vspace{0.15cm}
+%----------------------------------------------------------------------------------------
+%    Automatic text filling based on set conditions to compare six months ago
+%----------------------------------------------------------------------------------------
+
+
+The most common attack this month is \onename{} which happened \onepoints{} times.
+\IfStrEq{\sixmonthsagoonecommon}{\onename}\\
+{This is the same as last time where it occurred \sixmonthsagoonecommonpoints{} times}{ This is Different to last time where it was \sixmonthsagoonecommon{}  that occurred \sixmonthsagoonecommonpoints{} times.}
+
+%----------------------------------------------------------------------------------------
+%    Compares the attacks to work if same, less or greater
+%----------------------------------------------------------------------------------------
+
+%IF the number of attacks is less it says it has fallen
+\ifnum \totalattackcurrentmonth<\totalattacksixmonth
+{There has been a fall in the amount of attacks.}
+
+\else
+    \ifnum \totalattackcurrentmonth>\totalattacksixmonth
+    %if the number is higher than it says it has risen
+    {There has been a rise in the amount of attacks.}
+    \else
+    %If it has stayed the same it says that it doesn't change
+    {There has been no change in the amount of attacks.}
+    \fi
+\fi
+
+
+
+
+
+
+\vspace{5.1cm} %remove this, only added for spacing
+
+}
+
+
+\end{poster}
+
+\end{document}
