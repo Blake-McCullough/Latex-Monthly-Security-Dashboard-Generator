@@ -3,6 +3,8 @@ This is from a project I worked on during my internship with ES2.
 
 
 
+You can see an example of what the code looks like when it is generated (Compiled) at the file  Latex__DashBoard_Generated.pdf
+
 How it works, is that the Latex takes the data from the CSV Files and will use those to create the graphs,tables etc
 
 The advantage of Latex over word etc, is that it can be run from terminal(after programmed) and when an item is set to be in a specific area, it will stay there, unlike how word moves it around.
